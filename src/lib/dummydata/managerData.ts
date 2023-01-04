@@ -1,1 +1,1 @@
-export const manager = ['김OO', '이OO', '박OO', '최OO'];
+export const managers = ['김OO', '이OO', '박OO', '최OO'];
