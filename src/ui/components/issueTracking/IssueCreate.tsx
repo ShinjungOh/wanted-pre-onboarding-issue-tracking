@@ -9,21 +9,44 @@ interface Props {
   issueStateData: string[];
   selectedState: string;
   handleChangeSelect: any;
+  onSubmit: any;
 }
 
-const IssueCreate = ({ isOpen, isModalOpen, selectedState, handleChangeSelect, issueStateData }: Props) => {
-  const [userInput, setUserInput] = useState('');
-  // const [issues, setIssues] = useState([]);
+const IssueCreate = ({ isOpen, isModalOpen, selectedState, issueStateData, onSubmit }: Props) => {
+  const [userInput, setUserInput] = useState({
+    state: selectedState,
+    title: '',
+    text: '',
+    due: '',
+    manager: '',
+  });
+  const [isOpenSearchList, setIsOpenSearchList] = useState(false);
+  const [searchManagerList, setSearchManagerList] = useState<string[]>([]);
 
-  // const nextId = useRef(0);
-
-  const onChangeMangerInput = (e: any) => {
-    const { value } = e.target;
-    setUserInput(value);
+  const handleChangeInput = (e: any) => {
+    const { value, name } = e.target;
+    if (value === '') {
+      setIsOpenSearchList(false);
+    }
+    setUserInput({
+      ...userInput,
+      [name]: value,
+    });
+    const regexp = new RegExp(value, 'gi');
+    const searchManager = managers.filter((manager) => manager.match(regexp));
+    // console.log(searchManager, managers, value);
+    setSearchManagerList(searchManager);
+    setIsOpenSearchList(true);
   };
 
-  const searchManager = managers.filter((manager) => manager.includes(userInput));
-  console.log(searchManager);
+  const handleSearchInputClick = (searchInputText: string) => {
+    // console.log('searchInputText', searchInputText);
+    setUserInput((prevUserInput) => ({
+      ...prevUserInput,
+      manager: searchInputText,
+    }));
+    setIsOpenSearchList(false);
+  };
 
   return (
     <Container isOpen={isOpen}>
@@ -35,7 +58,7 @@ const IssueCreate = ({ isOpen, isModalOpen, selectedState, handleChangeSelect, i
           <InputDetailContainer>
             <Label htmlFor="고유번호">고유번호</Label>
             <Input id="고유번호" type="text" readOnly={true} />
-            <SelectState onChange={handleChangeSelect} value={selectedState}>
+            <SelectState onChange={handleChangeInput} name="state" value={userInput.state}>
               {issueStateData.map((item: string) => (
                 <option value={item} key={item}>
                   {item}
@@ -44,22 +67,46 @@ const IssueCreate = ({ isOpen, isModalOpen, selectedState, handleChangeSelect, i
             </SelectState>
           </InputDetailContainer>
           <InputDetailContainer>
-            <Label htmlFor="담당자">담당자</Label>
-            <Input id="담당자" type="text" placeholder="담당자를 입력하세요." onChange={onChangeMangerInput} />
+            <Label htmlFor="manager">담당자</Label>
+            <Input
+              id="manager"
+              name="manager"
+              type="text"
+              placeholder="담당자를 입력하세요."
+              onChange={handleChangeInput}
+              value={userInput.manager}
+            />
           </InputDetailContainer>
-          {searchManager.length > 0 &&
-            userInput.length > 0 &&
-            searchManager.map((manager) => <SearchInput key={manager}>{searchManager}</SearchInput>)}
+          {isOpenSearchList && searchManagerList.length > 0 && (
+            <SearchInput>
+              {searchManagerList.map((manager) => (
+                <li
+                  onClick={() => {
+                    handleSearchInputClick(manager);
+                  }}
+                >
+                  {manager}
+                </li>
+              ))}
+            </SearchInput>
+          )}
           <InputDetailContainer>
-            <Label htmlFor="제목">제목</Label>
-            <Input type="text" placeholder="제목을 입력하세요." />
+            <Label htmlFor="title">제목</Label>
+            <Input
+              id="title"
+              type="text"
+              name="title"
+              placeholder="제목을 입력하세요."
+              value={userInput.title}
+              onChange={handleChangeInput}
+            />
           </InputDetailContainer>
-          <Textarea placeholder="내용을 입력하세요." />
+          <Textarea name="text" placeholder="내용을 입력하세요." value={userInput.text} onChange={handleChangeInput} />
           <InputDetailContainer>
-            <Label htmlFor="마감일">마감일</Label>
-            <Input id="마감일" type="datetime-local" />
+            <Label htmlFor="due">마감일</Label>
+            <Input id="due" name="due" type="datetime-local" value={userInput.due} onChange={handleChangeInput} />
           </InputDetailContainer>
-          <Button>등록하기</Button>
+          <Button onClick={onSubmit}>등록하기</Button>
         </InputContainer>
       ) : null}
     </Container>
@@ -182,7 +229,7 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-const SearchInput = styled.div`
+const SearchInput = styled.ul`
   width: 295px;
   height: auto;
   padding: 2px 5px;
@@ -196,4 +243,13 @@ const SearchInput = styled.div`
   overflow-y: auto;
   z-index: 1;
   box-shadow: 0 4px 5px rgba(134, 133, 133, 0.3);
+  list-style: none;
+
+  li {
+    padding: 0;
+    cursor: pointer;
+    &:hover {
+      background: #e2e2e2;
+    }
+  }
 `;

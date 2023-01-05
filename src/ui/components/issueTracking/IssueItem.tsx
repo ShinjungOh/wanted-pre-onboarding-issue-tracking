@@ -1,23 +1,31 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { FaPlus } from 'react-icons/fa';
+import { IssueProps } from '../../../lib/type/IssueProps';
 
 interface IssueItemProps {
   issueState: string;
-  handleOpenCreateModal: () => void;
+  handleOpenCreateModal: (issueState: string) => void;
+  issues: IssueProps[];
 }
 
-const IssueItem = ({ issueState, handleOpenCreateModal }: IssueItemProps) => {
+const IssueItem = ({ issueState, handleOpenCreateModal, issues }: IssueItemProps) => {
+  const handleCreateClick = () => {
+    handleOpenCreateModal(issueState);
+  };
+
   return (
     <Container>
       <Header>
         <Title>{issueState}</Title>
-        <PlusBox onClick={handleOpenCreateModal}>
+        <PlusBox onClick={handleCreateClick}>
           <FaPlus />
         </PlusBox>
       </Header>
       <IssueContainer>
-        <Issue>issue tracking</Issue>
+        <Issue>
+          <div>Issue Tracking</div>
+        </Issue>
       </IssueContainer>
     </Container>
   );
