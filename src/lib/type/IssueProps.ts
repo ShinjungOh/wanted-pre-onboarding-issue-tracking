@@ -1,6 +1,6 @@
 export interface IssueProps {
   state: string;
-  id: number;
+  id?: number;
   title: string;
   text: string;
   due: string;

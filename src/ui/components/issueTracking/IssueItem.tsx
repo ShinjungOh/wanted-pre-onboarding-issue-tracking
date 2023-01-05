@@ -7,11 +7,12 @@ import { AiOutlineClose } from 'react-icons/ai';
 interface IssueItemProps {
   issueState: string;
   handleOpenCreateModal: (issueState: string) => void;
+  handleOpenEditModal: (issue: IssueProps) => void;
   issues: IssueProps[];
   onDelete: any;
 }
 
-const IssueItem = ({ issueState, handleOpenCreateModal, issues, onDelete }: IssueItemProps) => {
+const IssueItem = ({ issueState, handleOpenCreateModal, handleOpenEditModal, issues, onDelete }: IssueItemProps) => {
   const handleCreateClick = () => {
     handleOpenCreateModal(issueState);
   };
@@ -26,7 +27,12 @@ const IssueItem = ({ issueState, handleOpenCreateModal, issues, onDelete }: Issu
       </Header>
       <IssueContainer>
         {issues.map((issue) => (
-          <Issue key={issue.id}>
+          <Issue
+            key={issue.id}
+            onClick={() => {
+              handleOpenEditModal(issue);
+            }}
+          >
             <div>{issue.title}</div>
             <div>{issue.manager}</div>
             <CloseBox onClick={() => onDelete(issue)}>

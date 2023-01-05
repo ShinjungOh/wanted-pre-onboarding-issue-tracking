@@ -2,24 +2,36 @@ import React, { useMemo, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { AiOutlineClose } from 'react-icons/ai';
 import { managers } from '../../../lib/dummydata/managerData';
+import { IssueProps } from '../../../lib/type/IssueProps';
+
+const MODAL_TYPE = {
+  CREATE: '등록하기',
+  EDIT: '수정하기',
+};
 
 interface Props {
   isOpen: boolean;
+  modalType: 'CREATE' | 'EDIT';
   isModalOpen: () => void;
   issueStateData: string[];
   selectedState: string;
-  handleChangeSelect: any;
+  issue: IssueProps;
   onSubmit: any;
 }
 
-const IssueCreate = ({ isOpen, isModalOpen, selectedState, issueStateData, onSubmit }: Props) => {
-  const [userInput, setUserInput] = useState({
-    state: selectedState,
-    title: '',
-    text: '',
-    due: '',
-    manager: '',
-  });
+const IssueCreate = ({ isOpen, modalType, isModalOpen, selectedState, issueStateData, issue, onSubmit }: Props) => {
+  const [userInput, setUserInput] = useState(
+    modalType === 'CREATE'
+      ? {
+          state: selectedState,
+          title: '',
+          text: '',
+          due: '',
+          manager: '',
+        }
+      : issue,
+  );
+  console.log(userInput);
   const [isOpenSearchList, setIsOpenSearchList] = useState(false);
   const [searchManagerList, setSearchManagerList] = useState<string[]>([]);
 
@@ -57,9 +69,9 @@ const IssueCreate = ({ isOpen, isModalOpen, selectedState, issueStateData, onSub
         userInput.title.length > 1 &&
         userInput.text.length > 1 &&
         userInput.due &&
-        searchManagerList.includes(userInput.manager)
+        managers.includes(userInput.manager)
       ),
-    [userInput.title, userInput.text, userInput.due, userInput.manager],
+    [userInput.title, userInput.text, userInput.due, userInput.manager, managers],
   );
 
   return (
@@ -70,8 +82,12 @@ const IssueCreate = ({ isOpen, isModalOpen, selectedState, issueStateData, onSub
             <AiOutlineClose color="#cdcdcd" />
           </CloseBox>
           <InputDetailContainer>
-            <Label htmlFor="id">고유번호</Label>
-            <Input id="id" type="text" readOnly={true} />
+            {modalType === 'EDIT' && (
+              <div style={{ width: '200px' }}>
+                <Label htmlFor="id">고유번호</Label>
+                <span style={{ marginLeft: '10px' }}>{issue.id}</span>
+              </div>
+            )}
             <SelectState onChange={handleChangeInput} name="state" value={userInput.state}>
               {issueStateData.map((item: string) => (
                 <option value={item} key={item}>
@@ -120,8 +136,8 @@ const IssueCreate = ({ isOpen, isModalOpen, selectedState, issueStateData, onSub
             <Label htmlFor="due">마감일</Label>
             <Input id="due" name="due" type="datetime-local" value={userInput.due} onChange={handleChangeInput} />
           </InputDetailContainer>
-          <Button onClick={() => onSubmit(userInput)} disabled={isValidate}>
-            등록하기
+          <Button onClick={() => onSubmit(userInput, modalType)} disabled={isValidate}>
+            {MODAL_TYPE[modalType]}
           </Button>
         </InputContainer>
       ) : null}
@@ -179,7 +195,7 @@ const InputContainer = styled.div`
 `;
 
 const SelectState = styled.select`
-  width: 200px;
+  width: 100%;
   height: 30px;
   padding: 2px 12px;
   background-color: #e1efff;
