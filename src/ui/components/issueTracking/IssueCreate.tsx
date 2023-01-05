@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { AiOutlineClose } from 'react-icons/ai';
 import { managers } from '../../../lib/dummydata/managerData';
@@ -47,6 +47,17 @@ const IssueCreate = ({ isOpen, isModalOpen, selectedState, issueStateData, onSub
     }));
     setIsOpenSearchList(false);
   };
+
+  const isValidate = useMemo(
+    () =>
+      !(
+        userInput.title.length > 1 &&
+        userInput.text.length > 1 &&
+        userInput.due &&
+        searchManagerList.includes(userInput.manager)
+      ),
+    [userInput.title, userInput.text, userInput.due, userInput.manager],
+  );
 
   return (
     <Container isOpen={isOpen}>
@@ -106,7 +117,9 @@ const IssueCreate = ({ isOpen, isModalOpen, selectedState, issueStateData, onSub
             <Label htmlFor="due">마감일</Label>
             <Input id="due" name="due" type="datetime-local" value={userInput.due} onChange={handleChangeInput} />
           </InputDetailContainer>
-          <Button onClick={onSubmit}>등록하기</Button>
+          <Button onClick={onSubmit} disabled={isValidate}>
+            등록하기
+          </Button>
         </InputContainer>
       ) : null}
     </Container>
@@ -227,6 +240,11 @@ const Button = styled.button`
   border-radius: 8px;
   border: none;
   cursor: pointer;
+
+  &:disabled {
+    background-color: #c7c7c7;
+    cursor: not-allowed;
+  }
 `;
 
 const SearchInput = styled.ul`
@@ -238,7 +256,7 @@ const SearchInput = styled.ul`
   border-radius: 2px;
   outline: none;
   position: fixed;
-  top: 221px;
+  top: 205px;
   left: 380px;
   overflow-y: auto;
   z-index: 1;
@@ -246,6 +264,7 @@ const SearchInput = styled.ul`
   list-style: none;
 
   li {
+    margin: 0;
     padding: 0;
     cursor: pointer;
     &:hover {
