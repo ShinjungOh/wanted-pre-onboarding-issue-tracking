@@ -23,9 +23,14 @@ const IssueItem = ({ issueState, handleOpenCreateModal, issues }: IssueItemProps
         </PlusBox>
       </Header>
       <IssueContainer>
-        <Issue>
-          <div>Issue Tracking</div>
-        </Issue>
+        {issues &&
+          issues.map((issue) => (
+            <Issue key={issue.id}>
+              <div>{issue.id}</div>
+              <div>{issue.title}</div>
+              <div>{issue.manager}</div>
+            </Issue>
+          ))}
       </IssueContainer>
     </Container>
   );

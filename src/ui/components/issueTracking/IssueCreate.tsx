@@ -32,11 +32,14 @@ const IssueCreate = ({ isOpen, isModalOpen, selectedState, issueStateData, onSub
       ...userInput,
       [name]: value,
     });
-    const regexp = new RegExp(value, 'gi');
-    const searchManager = managers.filter((manager) => manager.match(regexp));
-    // console.log(searchManager, managers, value);
-    setSearchManagerList(searchManager);
-    setIsOpenSearchList(true);
+
+    if (name === 'manager') {
+      const regexp = new RegExp(value, 'gi');
+      const searchManager = managers.filter((manager) => manager.match(regexp));
+      // console.log(searchManager, managers, value);
+      setSearchManagerList(searchManager);
+      setIsOpenSearchList(true);
+    }
   };
 
   const handleSearchInputClick = (searchInputText: string) => {
@@ -67,8 +70,8 @@ const IssueCreate = ({ isOpen, isModalOpen, selectedState, issueStateData, onSub
             <AiOutlineClose color="#cdcdcd" />
           </CloseBox>
           <InputDetailContainer>
-            <Label htmlFor="고유번호">고유번호</Label>
-            <Input id="고유번호" type="text" readOnly={true} />
+            <Label htmlFor="id">고유번호</Label>
+            <Input id="id" type="text" readOnly={true} />
             <SelectState onChange={handleChangeInput} name="state" value={userInput.state}>
               {issueStateData.map((item: string) => (
                 <option value={item} key={item}>
@@ -117,7 +120,7 @@ const IssueCreate = ({ isOpen, isModalOpen, selectedState, issueStateData, onSub
             <Label htmlFor="due">마감일</Label>
             <Input id="due" name="due" type="datetime-local" value={userInput.due} onChange={handleChangeInput} />
           </InputDetailContainer>
-          <Button onClick={onSubmit} disabled={isValidate}>
+          <Button onClick={() => onSubmit(userInput)} disabled={isValidate}>
             등록하기
           </Button>
         </InputContainer>
