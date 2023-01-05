@@ -15,6 +15,8 @@ const IssueTrackingPage = () => {
 
   const nextId = useRef(0);
 
+  console.log(nextId);
+
   const handleToggleOpen = () => {
     setIsOpen((prev) => !prev);
   };
@@ -28,25 +30,21 @@ const IssueTrackingPage = () => {
     setSelectedState(e.target.value);
   };
 
-  console.log(todoIssues);
-
   const handleIssueSubmit = (userInput: IssueProps) => {
     nextId.current += 1;
     if (userInput.state === '할 일') {
       setTodoIssues([...todoIssues, userInput]);
-      handleToggleOpen();
-      return;
     }
     if (userInput.state === '진행 중') {
       setProgressIssues([...progressIssues, userInput]);
-      handleToggleOpen();
-      return;
     }
     if (userInput.state === '완료') {
       setDoneIssues([...doneIssues, userInput]);
-      handleToggleOpen();
     }
+    handleToggleOpen();
   };
+
+  const handleIssueDelete = (userInput: IssueProps) => {};
 
   return (
     <Container>
@@ -60,9 +58,24 @@ const IssueTrackingPage = () => {
           onSubmit={handleIssueSubmit}
         />
       )}
-      <IssueItem issueState="할 일" handleOpenCreateModal={handleOpenCreateModal} issues={todoIssues} />
-      <IssueItem issueState="진행 중" handleOpenCreateModal={handleOpenCreateModal} issues={progressIssues} />
-      <IssueItem issueState="완료" handleOpenCreateModal={handleOpenCreateModal} issues={doneIssues} />
+      <IssueItem
+        issueState="할 일"
+        handleOpenCreateModal={handleOpenCreateModal}
+        issues={todoIssues}
+        onDelete={handleIssueDelete}
+      />
+      <IssueItem
+        issueState="진행 중"
+        handleOpenCreateModal={handleOpenCreateModal}
+        issues={progressIssues}
+        onDelete={handleIssueDelete}
+      />
+      <IssueItem
+        issueState="완료"
+        handleOpenCreateModal={handleOpenCreateModal}
+        issues={doneIssues}
+        onDelete={handleIssueDelete}
+      />
     </Container>
   );
 };
