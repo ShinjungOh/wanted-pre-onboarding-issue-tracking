@@ -17,6 +17,10 @@ const IssueTrackingPage = () => {
 
   console.log(nextId);
 
+  console.log('todoIssues', todoIssues);
+  console.log('progressIssues', progressIssues);
+  console.log('doneIssues', doneIssues);
+
   const handleToggleOpen = () => {
     setIsOpen((prev) => !prev);
   };
@@ -33,18 +37,50 @@ const IssueTrackingPage = () => {
   const handleIssueSubmit = (userInput: IssueProps) => {
     nextId.current += 1;
     if (userInput.state === '할 일') {
-      setTodoIssues([...todoIssues, userInput]);
+      setTodoIssues([
+        ...todoIssues,
+        {
+          ...userInput,
+          id: nextId.current,
+        },
+      ]);
     }
     if (userInput.state === '진행 중') {
-      setProgressIssues([...progressIssues, userInput]);
+      setProgressIssues([
+        ...progressIssues,
+        {
+          ...userInput,
+          id: nextId.current,
+        },
+      ]);
     }
     if (userInput.state === '완료') {
-      setDoneIssues([...doneIssues, userInput]);
+      setDoneIssues([
+        ...doneIssues,
+        {
+          ...userInput,
+          id: nextId.current,
+        },
+      ]);
     }
     handleToggleOpen();
   };
 
-  const handleIssueDelete = (userInput: IssueProps) => {};
+  const handleIssueDelete = (userInput: IssueProps) => {
+    if (userInput.state === '할 일') {
+      setTodoIssues((prev) => prev.filter((issue) => issue.id !== userInput.id));
+      return;
+    }
+    if (userInput.state === '진행 중') {
+      setProgressIssues((prev) => prev.filter((issue) => issue.id !== userInput.id));
+      return;
+    }
+    if (userInput.state === '완료') {
+      setDoneIssues((prev) => prev.filter((issue) => issue.id !== userInput.id));
+    }
+  };
+
+  const handleIssueUpdate = (userInput: IssueProps) => {};
 
   return (
     <Container>

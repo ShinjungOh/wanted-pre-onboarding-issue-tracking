@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaPlus } from 'react-icons/fa';
 import { IssueProps } from '../../../lib/type/IssueProps';
@@ -25,16 +25,15 @@ const IssueItem = ({ issueState, handleOpenCreateModal, issues, onDelete }: Issu
         </PlusBox>
       </Header>
       <IssueContainer>
-        {issues &&
-          issues.map((issue) => (
-            <Issue key={issue.id}>
-              <div>{issue.title}</div>
-              <div>{issue.manager}</div>
-              <CloseBox onClick={onDelete}>
-                <AiOutlineClose color="#cdcdcd" />
-              </CloseBox>
-            </Issue>
-          ))}
+        {issues.map((issue) => (
+          <Issue key={issue.id}>
+            <div>{issue.title}</div>
+            <div>{issue.manager}</div>
+            <CloseBox onClick={() => onDelete(issue)}>
+              <AiOutlineClose color="#cdcdcd" />
+            </CloseBox>
+          </Issue>
+        ))}
       </IssueContainer>
     </Container>
   );
