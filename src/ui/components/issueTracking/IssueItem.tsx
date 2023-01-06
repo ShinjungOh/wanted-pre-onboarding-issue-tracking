@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { FaPlus } from 'react-icons/fa';
 import { IssueProps } from '../../../lib/type/IssueProps';
@@ -27,14 +27,15 @@ const IssueItem = ({ issueState, handleOpenCreateModal, handleOpenEditModal, iss
       </Header>
       <IssueContainer>
         {issues.map((issue) => (
-          <Issue
-            key={issue.id}
-            onClick={() => {
-              handleOpenEditModal(issue);
-            }}
-          >
-            <div>{issue.title}</div>
-            <div>{issue.manager}</div>
+          <Issue key={issue.id}>
+            <IssueBox
+              onClick={() => {
+                handleOpenEditModal(issue);
+              }}
+            >
+              <div>{issue.title}</div>
+              <div>{issue.manager}</div>
+            </IssueBox>
             <CloseBox onClick={() => onDelete(issue)}>
               <AiOutlineClose color="#cdcdcd" />
             </CloseBox>
@@ -105,6 +106,16 @@ const Issue = styled.div`
   background-color: #fffdfd;
   box-shadow: 5px 5px 5px #e5e5e5;
   border-radius: 8px;
+`;
+
+const IssueBox = styled.div`
+  width: 220px;
+  height: 70px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  cursor: pointer;
 `;
 
 const CloseBox = styled.div`

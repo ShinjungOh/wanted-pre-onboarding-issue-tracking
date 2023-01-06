@@ -103,16 +103,19 @@ const IssueTrackingPage = () => {
   };
 
   const handleIssueDelete = (userInput: IssueProps) => {
-    if (userInput.state === '할 일') {
-      setTodoIssues((prev) => prev.filter((issue) => issue.id !== userInput.id));
-      return;
-    }
-    if (userInput.state === '진행 중') {
-      setProgressIssues((prev) => prev.filter((issue) => issue.id !== userInput.id));
-      return;
-    }
-    if (userInput.state === '완료') {
-      setDoneIssues((prev) => prev.filter((issue) => issue.id !== userInput.id));
+    // eslint-disable-next-line no-restricted-globals
+    const deleteCheck = confirm('정말 삭제하시겠습니까?');
+    console.log(deleteCheck);
+    if (deleteCheck) {
+      if (userInput.state === '할 일') {
+        setTodoIssues((prev) => prev.filter((issue) => issue.id !== userInput.id));
+      }
+      if (userInput.state === '진행 중') {
+        setProgressIssues((prev) => prev.filter((issue) => issue.id !== userInput.id));
+      }
+      if (userInput.state === '완료') {
+        setDoneIssues((prev) => prev.filter((issue) => issue.id !== userInput.id));
+      }
     }
   };
 
