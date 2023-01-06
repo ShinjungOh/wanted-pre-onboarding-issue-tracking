@@ -5,8 +5,8 @@ import { managers } from '../../../lib/dummydata/managerData';
 import { IssueProps } from '../../../lib/type/IssueProps';
 
 const MODAL_TYPE = {
-  CREATE: '등록하기',
-  EDIT: '수정하기',
+  CREATE: '등록',
+  EDIT: '저장',
 };
 
 interface Props {
