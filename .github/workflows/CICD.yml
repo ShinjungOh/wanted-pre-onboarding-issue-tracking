@@ -1,0 +1,12 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  helloWorld:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo HelloWorld
